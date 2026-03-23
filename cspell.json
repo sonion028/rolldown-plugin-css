@@ -1,0 +1,27 @@
+{
+  // "import": ["@cspell/dict-lorem-ipsum/cspell-ext.json"], // 导入 乱数假文插件 字典
+  "caseSensitive": false, // 不区分大小写
+  "dictionaries": ["custom-dictionary"], // 自定义字典
+  "dictionaryDefinitions": [
+    {
+      "name": "custom-dictionary", // 自定义字典名称
+      "path": "./.cspell/custom-dictionary.txt", // 自定义字典文件路径
+      "addWords": true // 允许添加新单词到字典
+    }
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/public/**",
+    "**/lib/**",
+    "**/docs/**",
+    "**/vendor/**",
+    "**/static/**",
+    "**/out/**",
+    "**/tmp/**",
+    "**/stats.html",
+    "cspell.json",
+    ".cspell"
+  ]
+}

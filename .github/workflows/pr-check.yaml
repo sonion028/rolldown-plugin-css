@@ -1,0 +1,33 @@
+name: PR Check
+description: 运行 PR 检查
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-latest
+    steps:
+      # 使用本地 composite action 前需要先 checkout 代码
+      # 否则，GitHub Actions 无法找到本地的 action.yml 文件
+      - name: Checkout
+        uses: actions/checkout@v4 # 拉取触发工作流的 tag 对应 commit
+        with:
+          fetch-depth: 0 # 拉取完整历史。当仓库历史多时可能变慢，可考虑用 GitHub API compare 优化
+      - name: 准备环境
+        uses: ./.github/actions/env-setup # 引入 环境准备
+      - name: 基础检查
+        uses: ./.github/actions/base-check # 引入 基础检查
+
+      # Commitlint 检查（检查 PR 中所有 commits）
+      - name: Commitlint 检查
+        run: |
+          echo "运行 Commitlint 检查..."
+          pnpm exec commitlint --from=${{ github.event.pull_request.base.sha }} --to=${{ github.event.pull_request.head.sha }}
+          echo "Commitlint 检查通过 ✅"

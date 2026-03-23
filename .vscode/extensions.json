@@ -1,0 +1,10 @@
+{
+  // 推荐安装的插件
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "oxc.oxc-vscode",
+    "streetsidesoftware.code-spell-checker"
+  ]
+  // 不希望安装的插件
+  // "unwantedRecommendations": ["some.extension.you.dont.want"]
+}

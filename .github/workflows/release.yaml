@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*" # 例如 v1.2.3
+
+# Trusted Publisher 权限
+permissions:
+  id-token: write # Required for OIDC
+  contents: write # Required for Release
+
+jobs:
+  build-and-publish:
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v') && github.event.base_ref == 'refs/heads/main'
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu Runner
+    environment: production-publish-npm # 指定环境名
+
+    steps:
+      # 使用本地 composite action 前需要先 checkout 代码
+      # 否则，GitHub Actions 无法找到本地的 action.yml 文件
+      - name: Checkout
+        uses: actions/checkout@v4 # 拉取触发工作流的 tag 对应 commit
+        with:
+          fetch-depth: 0 # 拉取完整历史。当仓库历史多时可能变慢，可考虑用 GitHub API compare 优化
+
+      - name: 准备环境
+        uses: ./.github/actions/env-setup # 引入 环境准备
+      - name: 基础检查
+        uses: ./.github/actions/base-check # 引入 基础检查
+
+      # 找到上一个 tag
+      - name: 获取上一个 Tag
+        id: prev-tag
+        run: |
+          # 获取当前 tag
+          CURRENT_TAG=${GITHUB_REF#refs/tags/}
+          echo "当前 tag: $CURRENT_TAG"
+
+          # 找到上一个 tag（按时间排序）
+          # 如果当前 tag 是第一个 tag，则检查所有 commit
+          PREV_TAG=$(git describe --tags --abbrev=0 ${CURRENT_TAG}^ 2>/dev/null || echo "")
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "当前是第一个 tag，将检查所有 commit"
+            echo "prev_tag=" >> $GITHUB_OUTPUT
+          else
+            echo "上一个 tag: $PREV_TAG"
+            echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+          fi
+
+      # Commitlint 检查（从上一个 tag 到当前 tag）
+      - name: Commit 提交信息检查
+        run: |
+          echo "运行 Commitlint 检查..."
+
+          # 如果 prev_tag 为空（第一个 tag），则检查所有 commit
+          if [ -z "${{ steps.prev-tag.outputs.prev_tag }}" ]; then
+            pnpm exec commitlint --from=$(git rev-list --max-parents=0 HEAD) --to=${GITHUB_SHA}
+          else
+            pnpm exec commitlint --from=$(git rev-list -n 1 ${{ steps.prev-tag.outputs.prev_tag }}) --to=${GITHUB_SHA}
+          fi
+          echo "Commitlint 检查通过 ✅"
+
+      # tag 同步 package.json 版本 依赖jq
+      - name: 同步 Tag 为 package.json 版本
+        run: |
+          set -e
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+          echo "当前 Tag: $TAG，提取版本号: $VERSION"
+          if [ -z "$VERSION" ]; then
+            echo "错误：版本号为空，请检查 Tag 格式（应为 vX.Y.Z）"
+            exit 1
+          fi
+          jq ".version = \"$VERSION\"" package.json > package.json.tmp
+          mv package.json.tmp package.json
+          echo "更新后 package.json 版本: $(cat package.json | grep version)"
+
+      - name: 编译
+        run: |
+          echo "开始构建..."
+          pnpm run build
+          echo "构建完成 ✅"
+
+      # 打印将要发布的文件列表，避免误发布
+      - name: 打印发布文件列表
+        run: npm pack --dry-run
+
+      # 发布到 npm registry - 只在标签触发时执行
+      - name: Publish 到 npm
+        run: |
+          echo "开始发布到 npm..."
+          npm publish --access public --verbose
+          echo "发布成功 ✅"
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_TOKEN }} # 首次发布需要
+
+      # 只有发布成功后才生成 GitHub Release
+      - name: 创建 GitHub Release 记录
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            🎉 自动生成的 Release
+            - 发布版本: ${{ github.ref_name }}
+            - 提交 SHA: ${{ github.sha }}
+          draft: false
+          prerelease: false

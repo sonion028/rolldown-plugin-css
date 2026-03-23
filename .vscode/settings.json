@@ -1,0 +1,28 @@
+{
+  // 保存时自动格式化
+  "editor.formatOnSave": true,
+  // 格式化配置
+  "oxc.fmt.configPath": "oxfmt.config.ts",
+  // 必须用 per-language 指定，否则会被用户级设置中的 defaultFormatter 覆盖
+  // Cmd+Shift+P → Preferences: Open User Settings (JSON) 可查看用户级设置
+  // 工作区 per-language > 用户 per-language > 工作区 全局 > 用户 全局
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  // 保存时自动修复 eslint 错误
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  // 需要检查的文件类型
+  "eslint.validate": ["javascript", "typescript"],
+
+  // JSDoc 注释配置
+  "fileheader.configObj": {
+    "colon": [" ", " "],
+    "functionParamsShape": ["", ""],
+    "functionTypeSymbol": ""
+  }
+}

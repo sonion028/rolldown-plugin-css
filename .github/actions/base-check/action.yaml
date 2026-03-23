@@ -1,0 +1,27 @@
+name: Common Checks
+description: 运行 TypeScript 编译检查和 ESLint 检查
+
+runs:
+  using: composite
+  steps:
+    # TypeScript 编译检查
+    - name: TypeScript 检查
+      shell: bash
+      run: |
+        echo "运行 tsc 检查..."
+        pnpm exec tsc --noEmit
+        echo "tsc 检查通过 ✅"
+
+    # Lint 检查
+    - name: ESLint 检查
+      shell: bash
+      run: |
+        echo "运行 ESLint 检查..."
+        pnpm run lint
+        echo "Lint 检查通过 ✅"
+    - name: Oxfmt 检查
+      shell: bash
+      run: |
+        echo "运行 Oxfmt 检查..."
+        pnpm run fmt:check
+        echo "Oxfmt 检查通过 ✅"

@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "types": ["tsdown", "node"],
+
+    /* 目标与模块 */
+    "target": "ESNext",
+    "module": "NodeNext",
+    "lib": ["ES2022"],
+
+    /* 模块解析：现代 node 模式 */
+    "moduleResolution": "nodenext",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true, // 不生成类型文件，库开发不需要
+    "allowImportingTsExtensions": true, // 仅onEmit有效
+
+    /* 严格检查与 lint */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "noUncheckedSideEffectImports": true,
+    "useDefineForClassFields": true,
+    "erasableSyntaxOnly": true,
+
+    /* 互操作与工具支持 */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    // "baseUrl": ".", // 已废弃，使用 paths 替代
+    /* 路径别名 */
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

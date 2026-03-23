@@ -1,0 +1,74 @@
+name: Common Environment Setup
+description: 配置 Node.js 环境和 pnpm 安装项目依赖
+
+runs:
+  using: composite
+  steps:
+    - name: Print Current Workflow Trigger Info # 打印 当前触发工作流的引用和提交 SHA
+      shell: bash
+      run: |
+        echo "当前触发工作流的引用: $GITHUB_REF"
+        echo "当前触发工作流的提交 SHA: $GITHUB_SHA"
+
+    # 检查并安装 jq（如果不存在）
+    - name: Check and install jq
+      shell: bash
+      run: |
+        if ! command -v jq &> /dev/null; then
+          echo "jq 未找到，开始安装..."
+          apt-get update && apt-get install -y jq
+          echo "jq 安装完成"
+        else
+          echo "jq 已存在，版本: $(jq --version)"
+        fi
+
+    # 获取 pnpm 版本（来自 package.json engines）
+    - name: 读取 pnpm 版本
+      id: read-pnpm-version
+      shell: bash
+      run: |
+        PNPM_VERSION=$(jq -r '.engines.pnpm' package.json | grep -oE '[0-9]+(\.[0-9]+)*' | head -n1)
+        echo "pnpm-version=$PNPM_VERSION" >> $GITHUB_OUTPUT
+
+    - name: 全局安装 pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        run_install: false # 不运行 pnpm install
+        # version: ^10.28.2 # 不写version会读取package.json 的 packageManager
+        version: ${{ steps.read-pnpm-version.outputs.pnpm-version }}
+
+    - name: 安装 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.node-version'
+        # node-version: 24.13.0 # 建议用 LTS 版本，稳定性更好
+        registry-url: 'https://registry.npmjs.org/'
+        cache: 'pnpm'
+
+    # 调试 Node 环境（新增）
+    - name: 调试 Node.js 环境
+      shell: bash
+      run: |
+        echo "👉 Node.js 路径: $(which node)"
+        echo "👉 Node.js 版本: $(node -v)"
+        echo "👉 npm 路径: $(which npm)"
+        echo "👉 npm 版本: $(npm -v)"
+        echo "👉 NODE_PATH: $NODE_PATH"
+        echo "👉 PATH: $PATH"
+
+    # 调试 pnpm 环境
+    - name: 调试 pnpm 环境
+      shell: bash
+      run: |
+        echo "👉 pnpm 路径: $(which pnpm)"
+        echo "👉 pnpm 版本: $(pnpm -v)"
+        echo "👉 pnpm 全局路径: $(pnpm root -g)"
+        echo "👉 PATH: $PATH"
+
+    # 使用 pnpm 安装依赖 等价于 npm ci
+    - name: 安装依赖（使用 pnpm）
+      shell: bash
+      run: |
+        echo "开始安装依赖..."
+        pnpm install --frozen-lockfile --verbose
+        echo "依赖安装完成 ✅"
