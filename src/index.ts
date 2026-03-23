@@ -8,8 +8,8 @@ import {
   type CustomAtRules,
 } from 'lightningcss';
 
-import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from './constant';
-import { loadSass, loadLess } from './loader';
+import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from './constant/index.ts';
+import { loadSass, loadLess } from './loader/index.ts';
 
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
