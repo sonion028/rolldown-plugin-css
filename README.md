@@ -4,6 +4,8 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 
 [![npm version](https://img.shields.io/npm/v/rolldown-plugin-css)](https://www.npmjs.com/package/rolldown-plugin-css)
 [![license](https://img.shields.io/npm/l/rolldown-plugin-css)](./LICENSE)
+​​![Rolldown兼容性](https://registry.vite.dev/api/badges?package=rolldown-plugin-css&tool=rolldown)
+​​![Vite兼容性](https://registry.vite.dev/api/badges?package=rolldown-plugin-css&tool=vite)
 
 ---
 

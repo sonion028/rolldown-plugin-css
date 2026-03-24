@@ -22,10 +22,11 @@
     "pnpm": ">=10.32.1"
   },
   "peerDependencies": {
-    "less": "^4.6.4",
     "lightningcss": "^1.32.0",
+    "less": "^4.6.4",
     "sass": "^1.98.0",
-    "sass-embedded": "^1.98.0"
+    "sass-embedded": "^1.98.0",
+    "rolldown": ">=1.0.0-rc.11"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
@@ -53,6 +54,7 @@
     "typescript-eslint": "^8.57.1"
   },
   "keywords": [
+    "rolldown-plugin",
     "rolldown",
     "css",
     "sass",
@@ -65,5 +67,12 @@
   "bugs": {
     "url": "https://github.com/sonion028/rolldown-plugin-css/issues"
   },
-  "private": false
+  "private": false,
+  "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
+  "compatiblePackages": {
+    "schemaVersion": 1,
+    "rolldown": {"type": "compatible", "versions": ">=1.0.0-rc.9"},
+    "vite": { "type": "compatible", "versions": "^7.0.0 || ^8.0.0" },
+    "rollup": {"type": "unknown"}
+  }
 }
