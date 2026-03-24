@@ -1,0 +1,148 @@
+import path from 'node:path';
+import type { Plugin, NormalizedOutputOptions, OutputBundle } from 'rolldown';
+import {
+  transform,
+  Features,
+  type TransformOptions,
+  type Targets,
+  type CustomAtRules,
+} from 'lightningcss';
+
+import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '../constant/index.ts';
+import { loadSass, loadLess } from '../loader/index.ts';
+
+export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
+  TransformOptions<C>,
+  'filename' | 'code' | 'sourceMap'
+> {
+  /** @default Features.Nesting | Features.CustomMediaQueries */
+  include?: number;
+  /**
+   * CSS 文件输出到总输出目录下的相对子目录。
+   * 设为空字符串 '' 则直接输出到根目录。
+   * @default 'css'
+   */
+  cssDir?: string;
+}
+
+const slash = (p: string) => p.replace(/\\/g, '/');
+
+/**
+ * @author sonion
+ * @description CSS 插件，用于处理 CSS 文件。
+ * @param {CSSPluginOptions} options - 插件配置选项。
+ */
+export function rolldownCssPlugin(
+  options: CSSPluginOptions<CustomAtRules> = {}
+): Plugin {
+  const { cssDir = 'css', ...lightningOptions } = options;
+
+  const cssRecords = new Map<string, string>();
+
+  return {
+    name: 'rolldown-css-plugin',
+
+    async transform(code, id) {
+      const cleanId = id.split('?')[0]; // 没必要rolldown不支持query参数
+      if (!CSS_RE.test(cleanId)) return null;
+
+      const isModule = CSS_MOD_RE.test(cleanId);
+
+      let cssSource = code;
+      let inputSourceMap: string | undefined;
+
+      if (SASS_RE.test(cleanId)) {
+        const sass = await loadSass();
+        const r = sass.compileString(code, {
+          syntax: cleanId.endsWith('.sass') ? 'indented' : 'scss',
+          sourceMap: true,
+          sourceMapIncludeSources: true,
+          url: new URL(`file://${cleanId}`),
+          loadPaths: [path.dirname(cleanId), 'node_modules'],
+        });
+        cssSource = r.css;
+        if (r.sourceMap) inputSourceMap = JSON.stringify(r.sourceMap);
+      } else if (LESS_RE.test(cleanId)) {
+        const less = await loadLess();
+        const r = await less.render(code, {
+          filename: cleanId,
+          sourceMap: { sourceMapFileInline: false },
+          paths: [path.dirname(cleanId), 'node_modules'],
+        });
+        cssSource = r.css;
+        if (r.map) inputSourceMap = r.map;
+      }
+
+      const filename = path.relative(process.cwd(), cleanId);
+      const lcOpts: TransformOptions<CustomAtRules> = {
+        minify: false,
+        include: Features.Nesting | Features.CustomMediaQueries,
+        ...lightningOptions,
+        filename,
+        code: Buffer.from(cssSource),
+        sourceMap: true,
+        ...(inputSourceMap ? { inputSourceMap } : {}),
+      };
+
+      const { code: out, exports: cssExports, map } = transform(lcOpts);
+      cssRecords.set(cleanId, out.toString());
+
+      if (isModule && cssExports) {
+        const classMap: Record<string, string> = {};
+        for (const [local, info] of Object.entries(cssExports))
+          classMap[local] = (info as { name: string }).name;
+        const sm = map
+          ? `\n//# sourceMappingURL=data:application/json;base64,${Buffer.from(map.toString()).toString('base64')}`
+          : '';
+        return {
+          code: `const classes = ${JSON.stringify(classMap, null, 2)};\nexport default classes;${sm}`,
+          map: null,
+          moduleSideEffects: true,
+        };
+      }
+
+      return {
+        code: `/* css-plugin: ${filename} */`,
+        map: null,
+        moduleSideEffects: true,
+      };
+    },
+
+    generateBundle(opts: NormalizedOutputOptions, bundle: OutputBundle) {
+      if (cssRecords.size === 0) return;
+
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type !== 'chunk') continue;
+
+        const cssIds = Object.keys(chunk.modules).filter((id) =>
+          cssRecords.has(id)
+        );
+        if (cssIds.length === 0) continue;
+        const css = cssIds.map((id) => cssRecords.get(id)!).join('\n');
+
+        const baseName = `${
+          chunk.isEntry && chunk.name
+            ? chunk.name
+            : path.basename(chunk.fileName, path.extname(chunk.fileName))
+        }.css`;
+        const cssFileName = cssDir ? `${cssDir}/${baseName}` : baseName;
+        this.emitFile({ type: 'asset', fileName: cssFileName, source: css });
+
+        // 注入 import CSS 语句
+        const jsDir = path.dirname(chunk.fileName);
+        const rel = slash(path.relative(jsDir, cssFileName));
+        const importPath = rel.startsWith('.') ? rel : `./${rel}`;
+
+        const importStmt =
+          opts.format === 'cjs'
+            ? `require('${importPath}');\n`
+            : `import '${importPath}';\n`;
+        chunk.code = importStmt + chunk.code;
+      }
+    },
+  };
+}
+
+export { Features };
+export type { Targets, CustomAtRules };
+export default rolldownCssPlugin;
