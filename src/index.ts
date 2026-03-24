@@ -5,8 +5,9 @@ import cssPlugin, {
   type CustomAtRules,
 } from './plugin/index.ts';
 
-export const viteCssPlugin = (
-  options: CSSPluginOptions<CustomAtRules> = {}
+export const cssVite = ({
+  cssModules = false,
+  ...options }: CSSPluginOptions<CustomAtRules>
 ) => {
-  return cssPlugin({ ...options, cssModules: false });
+  return cssPlugin({ ...options, cssModules });
 };
