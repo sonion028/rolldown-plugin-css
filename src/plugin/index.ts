@@ -29,10 +29,10 @@ const slash = (p: string) => p.replace(/\\/g, '/');
 
 /**
  * @author sonion
- * @description CSS 插件，用于处理 CSS 文件。
- * @param {CSSPluginOptions} options - 插件配置选项。
+ * @description CSS plugin for processing CSS files with preprocessing, LightningCSS transforms, and automatic CSS injection.
+ * @param {CSSPluginOptions} options - Plugin configuration options.
  */
-export function rolldownCssPlugin(
+export function cssRolldown(
   options: CSSPluginOptions<CustomAtRules> = {}
 ): Plugin {
   const { cssDir = 'css', ...lightningOptions } = options;
@@ -145,4 +145,4 @@ export function rolldownCssPlugin(
 
 export { Features };
 export type { Targets, CustomAtRules };
-export default rolldownCssPlugin;
+export default cssRolldown;

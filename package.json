@@ -72,7 +72,7 @@
   "compatiblePackages": {
     "schemaVersion": 1,
     "rolldown": {"type": "compatible", "versions": ">=1.0.0-rc.9"},
-    "vite": { "type": "compatible", "versions": "^7.0.0 || ^8.0.0" },
+    "vite": { "type": "unknown" },
     "rollup": {"type": "unknown"}
   }
 }

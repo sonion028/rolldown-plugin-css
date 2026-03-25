@@ -7,7 +7,7 @@ import cssPlugin, {
 
 export const cssVite = ({
   cssModules = false,
-  ...options }: CSSPluginOptions<CustomAtRules>
-) => {
+  ...options
+}: CSSPluginOptions<CustomAtRules>) => {
   return cssPlugin({ ...options, cssModules });
 };
