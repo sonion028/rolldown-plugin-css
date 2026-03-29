@@ -5,6 +5,12 @@
   "type": "module",
   "module": "dist/index.esm.js",
   "types": "dist/types/index.d.mts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "types": "./dist/types/index.d.mts"
+    }
+  },
   "scripts": {
     "build": "tsdown",
     "lint": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}'",
