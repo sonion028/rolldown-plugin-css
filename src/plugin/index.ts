@@ -11,6 +11,12 @@ import {
 import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant/index.ts';
 import { loadSass, loadLess } from '@/loader/index.ts';
 
+if (typeof transform !== 'function') {
+  throw new Error(
+    '[rolldown-plugin-css] lightningcss not installed. npm install -D lightningcss'
+  );
+}
+
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
   'filename' | 'code' | 'sourceMap'

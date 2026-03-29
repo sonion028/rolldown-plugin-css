@@ -8,7 +8,7 @@ export async function loadSass(): Promise<typeof import('sass')> {
   if (_sass !== undefined) {
     if (_sass === null)
       throw new Error(
-        '[css-plugin] No sass compiler found.\n' +
+        '[rolldown-plugin-css] No sass compiler found.\n' +
           'Install:  npm install -D sass-embedded   (recommended)\n' +
           '          npm install -D sass'
       );
@@ -24,7 +24,7 @@ export async function loadSass(): Promise<typeof import('sass')> {
   }
   _sass = null;
   throw new Error(
-    '[css-plugin] No sass compiler found. npm install -D sass-embedded'
+    '[rolldown-plugin-css] No sass compiler found. npm install -D sass-embedded'
   );
 }
 
@@ -34,7 +34,9 @@ export async function loadSass(): Promise<typeof import('sass')> {
 export async function loadLess(): Promise<typeof import('less')> {
   if (_less !== undefined) {
     if (_less === null)
-      throw new Error('[css-plugin] less not installed. npm install -D less');
+      throw new Error(
+        '[rolldown-plugin-css] less not installed. npm install -D less'
+      );
     return _less;
   }
   try {
@@ -44,5 +46,7 @@ export async function loadLess(): Promise<typeof import('less')> {
     /**/
   }
   _less = null;
-  throw new Error('[css-plugin] less not installed. npm install -D less');
+  throw new Error(
+    '[rolldown-plugin-css] less not installed. npm install -D less'
+  );
 }

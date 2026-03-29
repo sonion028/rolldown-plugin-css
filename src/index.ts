@@ -1,6 +1,7 @@
 export * from './plugin/index.ts';
+export default cssRolldown;
 
-import cssPlugin, {
+import cssRolldown, {
   type CSSPluginOptions,
   type CustomAtRules,
 } from './plugin/index.ts';
@@ -9,5 +10,5 @@ export const cssVite = ({
   cssModules = false,
   ...options
 }: CSSPluginOptions<CustomAtRules>) => {
-  return cssPlugin({ ...options, cssModules });
+  return cssRolldown({ ...options, cssModules });
 };
