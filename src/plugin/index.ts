@@ -24,8 +24,8 @@ export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   /** @default Features.Nesting | Features.CustomMediaQueries */
   include?: number;
   /**
-   * CSS 文件输出到总输出目录下的相对子目录。
-   * 设为空字符串 '' 则直接输出到根目录。
+   * Relative subdirectory under the output directory where CSS files will be emitted.
+   * Set to empty string '' to output directly to the root directory.
    * @default 'css'
    */
   cssDir?: string;
@@ -82,11 +82,12 @@ export function cssRolldown(
       const filename = path.relative(process.cwd(), cleanId);
       const lcOpts: TransformOptions<CustomAtRules> = {
         minify: false,
+        cssModules: isModule,
+        sourceMap: true,
         include: Features.Nesting | Features.CustomMediaQueries,
         ...lightningOptions,
         filename,
         code: Buffer.from(cssSource),
-        sourceMap: true,
         ...(inputSourceMap ? { inputSourceMap } : {}),
       };
 

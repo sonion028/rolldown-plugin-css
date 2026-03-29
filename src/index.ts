@@ -6,9 +6,6 @@ import cssRolldown, {
   type CustomAtRules,
 } from './plugin/index.ts';
 
-export const cssVite = ({
-  cssModules = false,
-  ...options
-}: CSSPluginOptions<CustomAtRules>) => {
-  return cssRolldown({ ...options, cssModules });
+export const cssVite = (options?: CSSPluginOptions<CustomAtRules>) => {
+  return cssRolldown({ ...options, cssModules: options?.cssModules ?? false });
 };
