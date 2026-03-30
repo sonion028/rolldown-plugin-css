@@ -5,7 +5,7 @@ import type { TransformOptions, Targets, CustomAtRules } from 'lightningcss';
 // 确保 lightningcss 已安装
 const { transform, Features } = await import('lightningcss').catch(() => {
   throw new Error(
-    '[rolldown-plugin-css] lightningcss not installed. npm install -D lightningcss'
+    '[rolldown-plugin-css] ⚠️ lightningcss not installed. npm install -D lightningcss'
   );
 });
 

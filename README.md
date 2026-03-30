@@ -63,7 +63,7 @@ export default defineConfig({
 
 ### Vite
 
-> **⚠️ Recommendation:** It is recommended to use Vite's built-in CSS processing instead of this plugin when working with Vite. This plugin only works during the **build phase** — it has no dev server support, so styles will not be applied in dev mode. If you do choose to use this plugin with Vite, place it inside `build.rollupOptions.plugins` to limit it to the build phase only.
+> **⚠️ Recommendation:** It is recommended to use Vite's built-in CSS processing instead of this plugin when working with Vite. This plugin only works during the **build phase** — it has no dev server support, so styles will not be applied in dev mode.
 
 > **Note:** Vite has built-in CSS Modules processing that conflicts with this plugin. You need to disable CSS Modules in this plugin to resolve the conflict.
 
