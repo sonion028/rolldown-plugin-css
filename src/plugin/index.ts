@@ -1,21 +1,16 @@
 import path from 'node:path';
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from 'rolldown';
-import {
-  transform,
-  Features,
-  type TransformOptions,
-  type Targets,
-  type CustomAtRules,
-} from 'lightningcss';
+import type { TransformOptions, Targets, CustomAtRules } from 'lightningcss';
 
-import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant/index.ts';
-import { loadSass, loadLess } from '@/loader/index.ts';
-
-if (typeof transform !== 'function') {
+// 确保 lightningcss 已安装
+const { transform, Features } = await import('lightningcss').catch(() => {
   throw new Error(
     '[rolldown-plugin-css] lightningcss not installed. npm install -D lightningcss'
   );
-}
+});
+
+import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant/index.ts';
+import { loadSass, loadLess } from '@/loader/index.ts';
 
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
