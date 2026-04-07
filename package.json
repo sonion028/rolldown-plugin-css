@@ -16,13 +16,14 @@
     "preinstall": "npm run sync:node-version && (npx -y only-allow pnpm || exit 1)",
     "prepare": "npx simple-git-hooks",
     "sync:node-version": "node scripts/sync-node-version/index.js",
+
     "lint": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}'",
     "lint:fix": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --fix",
     "lint:error": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --quiet",
     "lint:spell": "cspell lint '{src,apps,packages}/**/*.{js,ts,jsx,tsx,mjs,cjs,json,css,less,scss,vue,html,md}'",
     "fmt": "oxfmt '{src,packages,apps}/**/*.*'",
     "fmt:check": "oxfmt --check '{src,packages,apps}/**/*.*'",
-    "check": "npm run lint && npm run fmt:check && npm run lint:spell",
+    "check": "npx tsc --noEmit && npm run lint && npm run fmt:check && npm run lint:spell",
     "fix": "npm run lint:fix && npm run fmt"
   },
   "engines": {
