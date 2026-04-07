@@ -23,7 +23,6 @@
     "noUncheckedSideEffectImports": true,
     "useDefineForClassFields": true,
     "erasableSyntaxOnly": true,
-    // "strictIsolated": true,
     "noUncheckedIndexedAccess": true,
 
     /* 互操作与工具支持 */
