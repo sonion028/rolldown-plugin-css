@@ -105,8 +105,8 @@ jobs:
           tag_name: ${{ github.ref_name }}
           release_name: Release ${{ github.ref_name }}
           body: |
-            🎉 自动生成的 Release
-            - 发布版本: ${{ github.ref_name }}
-            - 提交 SHA: ${{ github.sha }}
+            🎉 Auto-generated Release
+            - Release Version: ${{ github.ref_name }}
+            - Commit SHA: ${{ github.sha }}
           draft: false
           prerelease: false
