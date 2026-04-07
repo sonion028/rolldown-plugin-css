@@ -25,6 +25,7 @@
     "erasableSyntaxOnly": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
+    "useUnknownInCatchVariables": true,
 
     /* 互操作与工具支持 */
     "esModuleInterop": true,
