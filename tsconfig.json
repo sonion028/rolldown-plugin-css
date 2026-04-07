@@ -24,6 +24,7 @@
     "useDefineForClassFields": true,
     "erasableSyntaxOnly": true,
     "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
 
     /* 互操作与工具支持 */
     "esModuleInterop": true,
