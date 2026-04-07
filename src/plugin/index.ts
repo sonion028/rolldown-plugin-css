@@ -1,16 +1,15 @@
 import path from 'node:path';
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from 'rolldown';
 import type { TransformOptions, Targets, CustomAtRules } from 'lightningcss';
+import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant';
+import { loadSass, loadLess } from '@/loader';
 
-// 确保 lightningcss 已安装
+// Ensure lightningcss is installed
 const { transform, Features } = await import('lightningcss').catch(() => {
   throw new Error(
     '[rolldown-plugin-css] ⚠️ lightningcss not installed. npm install -D lightningcss'
   );
 });
-
-import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant/index.ts';
-import { loadSass, loadLess } from '@/loader/index.ts';
 
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
@@ -44,7 +43,7 @@ export function cssRolldown(
     name: 'rolldown-css-plugin',
 
     async transform(code, id) {
-      const cleanId = id.split('?')[0]; // 没必要rolldown不支持query参数
+      const cleanId = id.split('?')[0] as string; // 没必要rolldown不支持query参数
       if (!CSS_RE.test(cleanId)) return null;
 
       const isModule = CSS_MOD_RE.test(cleanId);

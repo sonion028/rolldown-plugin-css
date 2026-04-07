@@ -4,11 +4,11 @@
 
     /* 目标与模块 */
     "target": "ESNext",
-    "module": "NodeNext",
+    "module": "ESNext",
     "lib": ["ES2022"],
 
-    /* 模块解析：现代 node 模式 */
-    "moduleResolution": "nodenext",
+    /* 模块解析：现代 bundler 模式 */
+    "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true, // 不生成类型文件，库开发不需要
@@ -23,6 +23,8 @@
     "noUncheckedSideEffectImports": true,
     "useDefineForClassFields": true,
     "erasableSyntaxOnly": true,
+    // "strictIsolated": true,
+    "noUncheckedIndexedAccess": true,
 
     /* 互操作与工具支持 */
     "esModuleInterop": true,
