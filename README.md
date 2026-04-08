@@ -49,7 +49,6 @@ import { defineConfig } from "rolldown";
 import { cssRolldown } from "rolldown-plugin-css";
 
 export default defineConfig({
-  ...
   plugins: [cssRolldown()],
 });
 ```
