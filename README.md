@@ -28,7 +28,6 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 ```bash
 npm install -D rolldown-plugin-css lightningcss
 ```
-
 **pnpm:**
 ```bash
 pnpm add -D rolldown-plugin-css lightningcss
