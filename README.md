@@ -22,17 +22,40 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 
 ## Installation
 
+### Required
+
+**npm:**
 ```bash
-# Required
-npm add -D rolldown-plugin-css lightningcss
+npm install -D rolldown-plugin-css lightningcss
+```
 
-# Sass support (pick one, sass-embedded is faster)
-npm add -D sass-embedded
+**pnpm:**
+```bash
+pnpm add -D rolldown-plugin-css lightningcss
+```
+
+### Optional Preprocessors
+
+**Sass/SCSS** (pick one):
+```bash
+# npm
+npm install -D sass-embedded  # faster, recommended
 # or
-npm add -D sass
+npm install -D sass
 
-# Less support
-npm add -D less
+# pnpm
+pnpm add -D sass-embedded  # faster, recommended
+# or
+pnpm add -D sass
+```
+
+**Less:**
+```bash
+# npm
+npm install -D less
+
+# pnpm
+pnpm add -D less
 ```
 
 > `lightningcss` is a required peer dependency. Preprocessors (`sass-embedded`, `sass`, `less`) are optional — only install what your project uses.
