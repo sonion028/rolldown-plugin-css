@@ -98,12 +98,10 @@ jobs:
 
       # 只有发布成功后才生成 GitHub Release
       - name: 创建 GitHub Release 记录
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
+          name: Release ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
           body: |
             🎉 Auto-generated Release
             - Release Version: ${{ github.ref_name }}
