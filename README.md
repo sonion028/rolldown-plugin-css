@@ -49,14 +49,7 @@ import { defineConfig } from "rolldown";
 import { cssRolldown } from "rolldown-plugin-css";
 
 export default defineConfig({
-  input: {
-    index: "src/index.ts",
-    components: "src/components/index.ts",
-  },
-  output: {
-    dir: "dist",
-    format: "esm",
-  },
+  ...
   plugins: [cssRolldown()],
 });
 ```
