@@ -9,7 +9,7 @@ runs:
       shell: bash
       run: |
         echo "运行 tsc 检查..."
-        pnpm exec tsc --noEmit
+        npx tsc --noEmit
         echo "tsc 检查通过 ✅"
 
     # Lint 检查
@@ -17,11 +17,11 @@ runs:
       shell: bash
       run: |
         echo "运行 ESLint 检查..."
-        pnpm run lint
+        npm run lint
         echo "Lint 检查通过 ✅"
     - name: Oxfmt 检查
       shell: bash
       run: |
         echo "运行 Oxfmt 检查..."
-        pnpm run fmt:check
+        npm run fmt:check
         echo "Oxfmt 检查通过 ✅"
