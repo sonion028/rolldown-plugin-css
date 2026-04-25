@@ -16,7 +16,6 @@
     "preinstall": "npm run sync:node-version && (npx -y only-allow pnpm || exit 1)",
     "prepare": "npx simple-git-hooks",
     "sync:node-version": "node scripts/sync-node-version/index.js",
-
     "lint": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}'",
     "lint:fix": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --fix",
     "lint:error": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --quiet",
@@ -27,7 +26,7 @@
     "fix": "npm run lint:fix && npm run fmt"
   },
   "engines": {
-    "node": ">=24.14.0",
+    "node": ">=24.14.1",
     "pnpm": ">=10.32.1"
   },
   "peerDependencies": {
