@@ -26,8 +26,8 @@
     "fix": "npm run lint:fix && npm run fmt"
   },
   "engines": {
-    "node": ">=24.14.1",
-    "pnpm": ">=10.32.1"
+    "node": ">=24.15.0",
+    "pnpm": ">=10.33.2"
   },
   "peerDependencies": {
     "less": "^4.6.4",
@@ -37,16 +37,16 @@
     "sass-embedded": "^1.98.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.5.0",
-    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
     "@eslint/js": "^10.0.1",
     "@types/less": "^3.0.8",
-    "@types/node": "^25.5.2",
+    "@types/node": "^25.6.2",
     "cspell": "^9.8.0",
-    "eslint": "^10.2.0",
+    "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^62.9.0",
-    "globals": "^17.4.0",
+    "globals": "^17.6.0",
     "less": "^4.6.4",
     "lightningcss": "^1.32.0",
     "lint-staged": "^16.4.0",
@@ -57,9 +57,9 @@
     "sass": "^1.99.0",
     "sass-embedded": "^1.99.0",
     "simple-git-hooks": "^2.13.1",
-    "tsdown": "^0.21.7",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0"
+    "tsdown": "^0.22.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.2"
   },
   "keywords": [
     "rolldown-plugin",
