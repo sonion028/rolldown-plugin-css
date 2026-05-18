@@ -1,7 +1,22 @@
 {
   "name": "rolldown-plugin-css",
   "version": "0.1.0",
+  "private": false,
   "description": "Rolldown CSS plugin: Sass/Scss/Less compilation, CSS Modules & compatibility via Lightning CSS, auto-injecting CSS imports into JS.",
+  "keywords": [
+    "css",
+    "less",
+    "lightningCSS",
+    "rolldown",
+    "rolldown-plugin",
+    "sass"
+  ],
+  "bugs": {
+    "url": "https://github.com/sonion028/rolldown-plugin-css/issues"
+  },
+  "license": "MIT",
+  "author": "sonion",
+  "repository": "https://github.com/sonion028/rolldown-plugin-css",
   "type": "module",
   "module": "dist/index.esm.js",
   "types": "dist/types/index.d.mts",
@@ -24,17 +39,6 @@
     "fmt:check": "oxfmt --check '{src,packages,apps}/**/*.*'",
     "check": "npx tsc --noEmit && npm run lint && npm run fmt:check && npm run lint:spell",
     "fix": "npm run lint:fix && npm run fmt"
-  },
-  "engines": {
-    "node": ">=24.15.0",
-    "pnpm": ">=10.33.4"
-  },
-  "peerDependencies": {
-    "less": "^4.6.4",
-    "lightningcss": "^1.32.0",
-    "rolldown": ">=1.0.0",
-    "sass": "^1.98.0",
-    "sass-embedded": "^1.98.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.3",
@@ -61,21 +65,17 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.2"
   },
-  "keywords": [
-    "rolldown-plugin",
-    "rolldown",
-    "css",
-    "sass",
-    "less",
-    "lightningCSS"
-  ],
-  "author": "sonion",
-  "license": "MIT",
-  "repository": "https://github.com/sonion028/rolldown-plugin-css",
-  "bugs": {
-    "url": "https://github.com/sonion028/rolldown-plugin-css/issues"
+  "peerDependencies": {
+    "less": "^4.6.4",
+    "lightningcss": "^1.32.0",
+    "rolldown": ">=1.0.0",
+    "sass": "^1.98.0",
+    "sass-embedded": "^1.98.0"
   },
-  "private": false,
+  "engines": {
+    "node": ">=24.15.0",
+    "pnpm": ">=10.33.4"
+  },
   "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
   "compatiblePackages": {
     "schemaVersion": 1,

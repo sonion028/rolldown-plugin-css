@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*" # 例如 v1.2.3
+      - 'v*.*.*' # 例如 v1.2.3
 
 # Trusted Publisher 权限
 permissions:
