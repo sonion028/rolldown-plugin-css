@@ -36,6 +36,7 @@ export default defineConfig([
   {
     ...shared,
     outDir: 'dist/types', // ✅ 关键：给 dts 任务单独设置 outDir
+    unbundle: true, // 不打包，每个源文件独立编译，保留目录结构。结合后面的只输出.d.ts的设置
     dts: {
       emitDtsOnly: true, // ✅ 只输出 .d.ts，不重复生成 JS
     },
