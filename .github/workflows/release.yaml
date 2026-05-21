@@ -85,13 +85,13 @@ jobs:
 
       # 打印将要发布的文件列表，避免误发布
       - name: 打印发布文件列表
-        run: npm pack --dry-run
+        run: pnpm pack --dry-run
 
       # 发布到 npm registry - 只在标签触发时执行
       - name: Publish 到 npm
         run: |
           echo "开始发布到 npm..."
-          npm publish --access public --verbose
+          pnpm publish --access public --no-git-checks
           echo "发布成功 ✅"
         # env:
         #   NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_TOKEN }} # 首次发布需要
