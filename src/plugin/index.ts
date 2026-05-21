@@ -43,6 +43,7 @@ export function cssRolldown(
     name: 'rolldown-css-plugin',
 
     async transform(code, id) {
+      if (process.env.NODE_ENV === 'development') return; // 不处理开发环境
       const cleanId = id.split('?')[0] as string; // 没必要rolldown不支持query参数
       if (!CSS_RE.test(cleanId)) return null;
 
