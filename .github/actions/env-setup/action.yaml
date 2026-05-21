@@ -22,6 +22,13 @@ runs:
           echo "jq 已存在，版本: $(jq --version)"
         fi
 
+    - name: 安装 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.node-version'
+        # node-version: 24.13.0 # 建议用 LTS 版本，稳定性更好
+        registry-url: 'https://registry.npmjs.org/'
+
     # 获取 pnpm 版本（来自 package.json devEngines.packageManager）
     - name: 读取 pnpm 版本
       id: read-pnpm-version
@@ -37,12 +44,9 @@ runs:
         # 不写version会读取package.json 的 packageManager
         version: ${{ steps.read-pnpm-version.outputs.pnpm-version }}
 
-    - name: 安装 Node.js
+    - name: 配置 Node cache
       uses: actions/setup-node@v4
       with:
-        node-version-file: '.node-version'
-        # node-version: 24.13.0 # 建议用 LTS 版本，稳定性更好
-        registry-url: 'https://registry.npmjs.org/'
         cache: 'pnpm'
 
     # 调试 Node 环境（新增）
