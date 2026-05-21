@@ -31,7 +31,7 @@ runs:
         echo "pnpm-version=$PNPM_VERSION" >> $GITHUB_OUTPUT
 
     - name: 全局安装 pnpm
-      uses: pnpm/action-setup@v6
+      uses: pnpm/action-setup@v4
       with:
         run_install: false # 不运行 pnpm install
         # 不写version会读取package.json 的 packageManager
