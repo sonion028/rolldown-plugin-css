@@ -22,19 +22,19 @@ runs:
           echo "jq 已存在，版本: $(jq --version)"
         fi
 
-    # 获取 pnpm 版本（来自 package.json engines）
+    # 获取 pnpm 版本（来自 package.json devEngines.packageManager）
     - name: 读取 pnpm 版本
       id: read-pnpm-version
       shell: bash
       run: |
-        PNPM_VERSION=$(jq -r '.engines.pnpm' package.json | grep -oE '[0-9]+(\.[0-9]+)*' | head -n1)
+        PNPM_VERSION=$(jq -r '.engines.pnpm' package.json)
         echo "pnpm-version=$PNPM_VERSION" >> $GITHUB_OUTPUT
 
     - name: 全局安装 pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v6
       with:
         run_install: false # 不运行 pnpm install
-        # version: ^10.28.2 # 不写version会读取package.json 的 packageManager
+        # 不写version会读取package.json 的 packageManager
         version: ${{ steps.read-pnpm-version.outputs.pnpm-version }}
 
     - name: 安装 Node.js
