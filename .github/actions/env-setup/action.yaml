@@ -25,20 +25,20 @@ runs:
     - name: 安装 Node.js
       uses: actions/setup-node@v4
       with:
-        node-version-file: '.node-version'
+        node-version-file: ".node-version"
         # node-version: 24.13.0 # 建议用 LTS 版本，稳定性更好
-        registry-url: 'https://registry.npmjs.org/'
+        registry-url: "https://registry.npmjs.org/"
 
     # 获取 pnpm 版本（来自 package.json devEngines.packageManager）
     - name: 读取 pnpm 版本
       id: read-pnpm-version
       shell: bash
       run: |
-        PNPM_VERSION=$(jq -r '.engines.pnpm' package.json)
+        PNPM_VERSION=$(jq -r '.devEngines.packageManager.version' package.json)
         echo "pnpm-version=$PNPM_VERSION" >> $GITHUB_OUTPUT
 
     - name: 全局安装 pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v6
       with:
         run_install: false # 不运行 pnpm install
         # 不写version会读取package.json 的 packageManager
@@ -47,7 +47,7 @@ runs:
     - name: 配置 Node cache
       uses: actions/setup-node@v4
       with:
-        cache: 'pnpm'
+        cache: "pnpm"
 
     # 调试 Node 环境（新增）
     - name: 调试 Node.js 环境

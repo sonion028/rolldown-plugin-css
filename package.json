@@ -28,17 +28,16 @@
   },
   "scripts": {
     "build": "tsdown",
-    "preinstall": "npm run sync:node-version && (npx -y only-allow pnpm || exit 1)",
-    "prepare": "npx simple-git-hooks",
-    "sync:node-version": "node scripts/sync-node-version/index.js",
+    "preinstall": "node scripts/sync-node-version/index.js",
+    "prepare": "pnpm exec simple-git-hooks",
     "lint": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}'",
     "lint:fix": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --fix",
     "lint:error": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --quiet",
     "lint:spell": "cspell lint '{src,apps,packages}/**/*.{js,ts,jsx,tsx,mjs,cjs,json,css,less,scss,vue,html,md}'",
     "fmt": "oxfmt '{src,packages,apps}/**/*.*'",
     "fmt:check": "oxfmt --check '{src,packages,apps}/**/*.*'",
-    "check": "npx tsc --noEmit && npm run lint && npm run fmt:check && npm run lint:spell",
-    "fix": "npm run lint:fix && npm run fmt"
+    "check": "pnpm exec tsc --noEmit && pnpm run lint && pnpm run fmt:check && pnpm run lint:spell",
+    "fix": "pnpm run lint:fix && pnpm run fmt"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
@@ -72,9 +71,20 @@
     "sass": "^1.98.0",
     "sass-embedded": "^1.98.0"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=10.33.4",
+      "onFail": "error"
+    },
+    "runtime": {
+      "name": "node",
+      "version": ">=24.15.0",
+      "onFail": "error"
+    }
+  },
   "engines": {
-    "node": ">=24.15.0",
-    "pnpm": "^10.33.4"
+    "node": ">=22.22.3"
   },
   "$schema": "https://raw.githubusercontent.com/vitejs/vite-plugin-registry/refs/heads/main/data/schema/extended-package-json.schema.json",
   "compatiblePackages": {
