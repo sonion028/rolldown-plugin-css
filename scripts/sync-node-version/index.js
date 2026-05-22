@@ -7,7 +7,11 @@ const packageJsonPath = path.join(process.cwd(), 'package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
 // 提取 node 版本
-const nodeVersion = packageJson.engines?.node;
+const {
+  engines: { node: runtimeVersion } = {},
+  devEngines: { runtime: { version: devVersion } = {} } = {},
+} = packageJson ?? {};
+const nodeVersion = devVersion ?? runtimeVersion;
 
 if (!nodeVersion) {
   console.error('Error: No node version found in package.json engines');
