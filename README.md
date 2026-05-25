@@ -11,7 +11,7 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 
 ## Features
 
-- 🎨 **Sass / SCSS / Less** — auto-detects installed preprocessors, no manual configuration needed
+- 🎨 **Sass / SCSS / Less** — built-in preprocessor support, no manual configuration needed
 - ⚡ **LightningCSS** — syntax lowering, vendor prefixing, minification, and all other LightningCSS transforms
 - 📦 **CSS Modules** — scoped class names for `*.module.*` files, exported as a JS object
 - 🔗 **Auto import injection** — automatically prepends `import './xxx.css'` (or `require`) to each JS chunk that contains styles
@@ -27,42 +27,14 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 **npm:**
 
 ```bash
-npm install -D rolldown-plugin-css lightningcss
+npm install -D rolldown-plugin-css
 ```
 
 **pnpm:**
 
 ```bash
-pnpm add -D rolldown-plugin-css lightningcss
+pnpm add -D rolldown-plugin-css
 ```
-
-### Optional Preprocessors
-
-**Sass/SCSS** (pick one):
-
-```bash
-# npm
-npm install -D sass-embedded  # faster, recommended
-# or
-npm install -D sass
-
-# pnpm
-pnpm add -D sass-embedded  # faster, recommended
-# or
-pnpm add -D sass
-```
-
-**Less:**
-
-```bash
-# npm
-npm install -D less
-
-# pnpm
-pnpm add -D less
-```
-
-> `lightningcss` is a required peer dependency. Preprocessors (`sass-embedded`, `sass`, `less`) are optional — only install what your project uses.
 
 ---
 
@@ -72,8 +44,8 @@ pnpm add -D less
 
 ```ts
 // rolldown.config.ts
-import { defineConfig } from 'rolldown';
-import { cssRolldown } from 'rolldown-plugin-css';
+import { defineConfig } from "rolldown";
+import { cssRolldown } from "rolldown-plugin-css";
 
 export default defineConfig({
   plugins: [cssRolldown()],
@@ -90,8 +62,8 @@ Use `cssVite`, which has CSS Modules handling disabled by default, and let Vite'
 
 ```ts
 // vite.config.ts
-import { defineConfig } from 'vite';
-import { cssVite } from 'rolldown-plugin-css';
+import { defineConfig } from "vite";
+import { cssVite } from "rolldown-plugin-css";
 
 export default defineConfig({
   plugins: [cssVite()], // CSS Modules disabled in plugin, handled by Vite
@@ -101,7 +73,7 @@ export default defineConfig({
 You can also use `cssRolldown` directly with `cssModules: false` for the same effect:
 
 ```ts
-import cssRolldown from 'rolldown-plugin-css';
+import cssRolldown from "rolldown-plugin-css";
 
 export default defineConfig({
   plugins: [cssRolldown({ cssModules: false })],
@@ -130,7 +102,7 @@ The plugin options extend LightningCSS’s [`TransformOptions`](https://lightnin
 ```ts
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
-  'filename' | 'code' | 'sourceMap'
+  "filename" | "code" | "sourceMap"
 > {
   include?: number; // default: Features.Nesting | Features.CustomMediaQueries
   cssDir?: string; // default: 'css'
@@ -147,12 +119,12 @@ Default: `undefined`
 Browser targets for syntax lowering and vendor prefixing. Use [`browserslistToTargets`](https://lightningcss.dev/docs.html#browser-targets) from `lightningcss` to convert a Browserslist query.
 
 ```ts
-import { browserslistToTargets } from 'lightningcss';
-import browserslist from 'browserslist';
-import { cssRolldown } from 'rolldown-plugin-css';
+import { browserslistToTargets } from "lightningcss";
+import browserslist from "browserslist";
+import { cssRolldown } from "rolldown-plugin-css";
 
 cssRolldown({
-  targets: browserslistToTargets(browserslist('>= 0.5%, not dead')),
+  targets: browserslistToTargets(browserslist(">= 0.5%, not dead")),
 });
 ```
 
@@ -166,7 +138,7 @@ Default: `Features.Nesting | Features.CustomMediaQueries`
 Controls which CSS draft features LightningCSS should transform/lower. `Features` is re-exported from this plugin for convenience.
 
 ```ts
-import { cssRolldown, Features } from 'rolldown-plugin-css';
+import { cssRolldown, Features } from "rolldown-plugin-css";
 
 cssRolldown({
   // Lower CSS Nesting and Custom Media Queries (default)
@@ -186,10 +158,10 @@ Default: `false`
 Minify the CSS output using LightningCSS.
 
 ```ts
-import { cssRolldown } from 'rolldown-plugin-css';
+import { cssRolldown } from "rolldown-plugin-css";
 
 cssRolldown({
-  minify: process.env.NODE_ENV === 'production',
+  minify: process.env.NODE_ENV === "production",
 });
 ```
 
@@ -203,11 +175,11 @@ Default: `undefined`
 LightningCSS CSS Modules configuration. When set, applies to all CSS Module files (`*.module.*`). The plugin detects CSS Module files by filename pattern — you don’t need to enable this manually for the detection to work, but you can use this option to customize the generated class name pattern and other CSS Modules behavior.
 
 ```ts
-import { cssRolldown } from 'rolldown-plugin-css';
+import { cssRolldown } from "rolldown-plugin-css";
 
 cssRolldown({
   cssModules: {
-    pattern: '[hash]_[local]', // default scoped class name pattern
+    pattern: "[hash]_[local]", // default scoped class name pattern
   },
 });
 ```
@@ -224,11 +196,11 @@ Default: `'css'`
 The subdirectory (relative to `output.dir`) where CSS asset files are written. The injected import path is automatically computed relative to each JS chunk’s location.
 
 ```ts
-import { cssRolldown } from 'rolldown-plugin-css';
+import { cssRolldown } from "rolldown-plugin-css";
 
-cssRolldown({ cssDir: 'css' }); // → dist/css/components.css  (default)
-cssRolldown({ cssDir: 'assets/styles' }); // → dist/assets/styles/components.css
-cssRolldown({ cssDir: '' }); // → dist/components.css
+cssRolldown({ cssDir: "css" }); // → dist/css/components.css  (default)
+cssRolldown({ cssDir: "assets/styles" }); // → dist/assets/styles/components.css
+cssRolldown({ cssDir: "" }); // → dist/components.css
 ```
 
 ---
@@ -251,7 +223,7 @@ Any file matching `*.module.*` is treated as a CSS Module. The plugin extracts s
 
 ```tsx
 // Button.tsx
-import styles from './Button.module.scss';
+import styles from "./Button.module.scss";
 
 export function Button({ label }: { label: string }) {
   return <button className={styles.button}>{label}</button>;
@@ -262,7 +234,7 @@ The compiled output exports a class name map:
 
 ```js
 // compiled output (simplified)
-const classes = { button: 'a1b2c_button' };
+const classes = { button: "a1b2c_button" };
 export default classes;
 ```
 
@@ -277,13 +249,13 @@ The corresponding CSS (`.a1b2c_button { ... }`) is extracted and written to the 
 Because the plugin options extend `TransformOptions` directly, you have access to all LightningCSS features:
 
 ```ts
-import { cssRolldown, Features } from 'rolldown-plugin-css';
-import { browserslistToTargets } from 'lightningcss';
-import browserslist from 'browserslist';
+import { cssRolldown, Features } from "rolldown-plugin-css";
+import { browserslistToTargets } from "lightningcss";
+import browserslist from "browserslist";
 
 cssRolldown({
   // Browser targets
-  targets: browserslistToTargets(browserslist('>= 0.5%, not dead')),
+  targets: browserslistToTargets(browserslist(">= 0.5%, not dead")),
 
   // Features to lower
   include:
@@ -293,15 +265,15 @@ cssRolldown({
     Features.OklabColors,
 
   // Minify in production
-  minify: process.env.NODE_ENV === 'production',
+  minify: process.env.NODE_ENV === "production",
 
   // Custom CSS Modules class name pattern
   cssModules: {
-    pattern: '[name]__[local]--[hash]',
+    pattern: "[name]__[local]--[hash]",
   },
 
   // CSS output directory
-  cssDir: 'assets',
+  cssDir: "assets",
 });
 ```
 
@@ -310,13 +282,13 @@ cssRolldown({
 The plugin automatically reads `output.format` from Rolldown’s output options and injects `import` or `require` accordingly. No extra configuration needed.
 
 ```ts
-import { cssRolldown } from 'rolldown-plugin-css';
+import { cssRolldown } from "rolldown-plugin-css";
 
 export default defineConfig({
-  input: 'src/index.ts',
+  input: "src/index.ts",
   output: [
-    { dir: 'dist/esm', format: 'esm' }, // → import './css/index.css'
-    { dir: 'dist/cjs', format: 'cjs' }, // → require('./css/index.css')
+    { dir: "dist/esm", format: "esm" }, // → import './css/index.css'
+    { dir: "dist/cjs", format: "cjs" }, // → require('./css/index.css')
   ],
   plugins: [cssRolldown()],
 });
@@ -366,13 +338,9 @@ The inject step happens in the same loop iteration where `cssFileName` is alread
 
 ## Peer dependencies
 
-| Package         | Required | Notes                             |
-| --------------- | -------- | --------------------------------- |
-| `rolldown`      | ✅       | `^1.0.0-rc.8` or later            |
-| `lightningcss`  | ✅       | Any recent version                |
-| `sass-embedded` | optional | For `.scss`/`.sass` (recommended) |
-| `sass`          | optional | For `.scss`/`.sass` (fallback)    |
-| `less`          | optional | For `.less`                       |
+| Package    | Required | Notes             |
+| ---------- | -------- | ----------------- |
+| `rolldown` | ✅       | `^1.0.0` or later |
 
 ---
 

@@ -42,7 +42,6 @@
   "dependencies": {
     "less": "^4.6.4",
     "lightningcss": "^1.32.0",
-    "rolldown": ">=1.0.0",
     "sass-embedded": "^1.98.0"
   },
   "devDependencies": {
@@ -69,6 +68,9 @@
     "tsdown": "^0.22.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4"
+  },
+  "peerDependencies": {
+    "rolldown": ">=1.0.0"
   },
   "devEngines": {
     "packageManager": {
