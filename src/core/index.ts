@@ -1,15 +1,10 @@
 import path from 'node:path';
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from 'rolldown';
-import type { TransformOptions, Targets, CustomAtRules } from 'lightningcss';
+import type { TransformOptions, CustomAtRules } from 'lightningcss';
 import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant';
-import { loadSass, loadLess } from '@/loader';
-
-// Ensure lightningcss is installed
-const { transform, Features } = await import('lightningcss').catch(() => {
-  throw new Error(
-    '[rolldown-plugin-css] ⚠️ lightningcss not installed. npm install -D lightningcss'
-  );
-});
+import { slash } from '@/utils';
+import { loadSass, loadLess } from '@/preprocessor';
+import { transform, Features } from '@/transform';
 
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
@@ -25,16 +20,12 @@ export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   cssDir?: string;
 }
 
-const slash = (p: string) => p.replace(/\\/g, '/');
-
 /**
  * @author sonion
  * @description CSS plugin for processing CSS files with preprocessing, LightningCSS transforms, and automatic CSS injection.
  * @param {CSSPluginOptions} options - Plugin configuration options.
  */
-export function cssRolldown(
-  options: CSSPluginOptions<CustomAtRules> = {}
-): Plugin {
+function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
   const { cssDir = 'css', ...lightningOptions } = options;
 
   const cssRecords = new Map<string, string>();
@@ -145,6 +136,4 @@ export function cssRolldown(
   };
 }
 
-export { Features };
-export type { Targets, CustomAtRules };
 export default cssRolldown;
