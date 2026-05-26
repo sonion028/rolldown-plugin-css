@@ -24,6 +24,7 @@ jobs:
         with:
           fetch-depth: 0 # 拉取完整历史。当仓库历史多时可能变慢，可考虑用 GitHub API compare 优化
 
+      # 推送 tag  github.event.base_ref不稳定，可能没有值
       - name: 验证 Tag 在 main 分支上
         run: |
           git fetch origin main
@@ -107,7 +108,7 @@ jobs:
 
       # 只有发布成功后才生成 GitHub Release
       - name: 创建 GitHub Release 记录
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: Release ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
