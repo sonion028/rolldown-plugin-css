@@ -34,9 +34,8 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
     name: 'rolldown-css-plugin',
 
     async transform(code, id) {
-      if (process.env.NODE_ENV === 'development') return; // 不处理开发环境
-      const cleanId = id.split('?')[0] as string; // 没必要rolldown不支持query参数
-      if (!CSS_RE.test(cleanId)) return null;
+      const cleanId = id.split('?')[0] as string;
+      if (!CSS_RE.test(cleanId)) return;
 
       const isModule = CSS_MOD_RE.test(cleanId);
 
@@ -102,7 +101,7 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
     },
 
     generateBundle(opts: NormalizedOutputOptions, bundle: OutputBundle) {
-      if (cssRecords.size === 0) return;
+      if (!cssRecords.size) return;
 
       for (const chunk of Object.values(bundle)) {
         if (chunk.type !== 'chunk') continue;
@@ -110,7 +109,7 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
         const cssIds = Object.keys(chunk.modules).filter((id) =>
           cssRecords.has(id)
         );
-        if (cssIds.length === 0) continue;
+        if (!cssIds?.length) continue;
         const css = cssIds.map((id) => cssRecords.get(id)!).join('\n');
 
         const baseName = `${

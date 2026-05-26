@@ -10,7 +10,7 @@ const shared = {
   },
   // 外部依赖配置 原external
   deps: {
-    neverBundle: ['node', 'rolldown'],
+    neverBundle: ['node', 'rolldown', 'vite'],
   },
   // 输出配置
   format: 'esm', // 输出 ESM, node环境支持 require(ESM)

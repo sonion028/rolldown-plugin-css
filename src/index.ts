@@ -1,10 +1,8 @@
-import cssRolldown, { type CSSPluginOptions } from './core';
-import type { CustomAtRules } from 'lightningcss';
+import cssRolldown from './core';
+import cssVite from './vite';
 
-export const cssVite = (options?: CSSPluginOptions<CustomAtRules>) => {
-  return cssRolldown({ ...options, cssModules: options?.cssModules ?? false });
-};
-
+export { cssRolldown, cssVite };
 export default cssRolldown;
+export type { CSSPluginOptions } from './core';
 export { Features } from './transform';
 export type { TransformOptions, Targets, CustomAtRules } from 'lightningcss';
