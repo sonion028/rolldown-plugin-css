@@ -1,26 +1,23 @@
-let _sass: typeof import('sass') | null | undefined;
+let _sass: typeof import('sass-embedded') | null | undefined;
 let _less: typeof import('less') | null | undefined;
 
 /**
  * Load sass compiler.
  */
-export async function loadSass(): Promise<typeof import('sass')> {
-  if (_sass !== undefined) {
-    if (_sass === null)
+export async function loadSass(): Promise<typeof import('sass-embedded')> {
+  if (_sass !== void 0) {
+    if (!_sass)
       throw new Error(
         '[rolldown-plugin-css] No sass compiler found.\n' +
-          'Install:  npm install -D sass-embedded   (recommended)\n' +
-          '          npm install -D sass'
+          'Install:  npm install -D sass-embedded'
       );
     return _sass;
   }
-  for (const pkg of ['sass-embedded', 'sass'] as const) {
-    try {
-      _sass = (await import(pkg)) as typeof import('sass');
-      return _sass;
-    } catch {
-      /**/
-    }
+  try {
+    _sass = await import('sass-embedded');
+    return _sass;
+  } catch {
+    /**/
   }
   _sass = null;
   throw new Error(
@@ -32,8 +29,8 @@ export async function loadSass(): Promise<typeof import('sass')> {
  * Load less compiler.
  */
 export async function loadLess(): Promise<typeof import('less')> {
-  if (_less !== undefined) {
-    if (_less === null)
+  if (_less !== void 0) {
+    if (!_less)
       throw new Error(
         '[rolldown-plugin-css] less not installed. npm install -D less'
       );

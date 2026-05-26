@@ -22,18 +22,15 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 
 ## Installation
 
-### Required
-
 **npm:**
 
 ```bash
+# npm
 npm install -D rolldown-plugin-css
-```
-
-**pnpm:**
-
-```bash
+# pnpm
 pnpm add -D rolldown-plugin-css
+# yarn
+yarn add -D rolldown-plugin-css
 ```
 
 ---
