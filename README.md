@@ -6,6 +6,7 @@ A CSS plugin for [Rolldown](https://rolldown.rs) that handles the full CSS pipel
 [![license](https://img.shields.io/npm/l/rolldown-plugin-css)](./LICENSE)
 ![Rolldown兼容性](https://registry.vite.dev/api/badges?package=rolldown-plugin-css&tool=rolldown)
 ![Vite兼容性](https://registry.vite.dev/api/badges?package=rolldown-plugin-css&tool=vite)
+![Rollup兼容性](https://registry.vite.dev/api/badges?package=rolldown-plugin-css&tool=rollup)
 
 ---
 
@@ -51,11 +52,9 @@ export default defineConfig({
 
 ### Vite
 
-> **⚠️ Recommendation:** It is recommended to use Vite's built-in CSS processing instead of this plugin when working with Vite. This plugin only works during the **build phase** — it has no dev server support, so styles will not be applied in dev mode.
+> **Note:** `cssVite` only works during the **build phase** (`vite build`). It has no dev server support — styles will not be applied in dev mode. Vite's built-in CSS handling will be used during development.
 
-> **Note:** Vite has built-in CSS Modules processing that conflicts with this plugin. You need to disable CSS Modules in this plugin to resolve the conflict.
-
-Use `cssVite`, which has CSS Modules handling disabled by default, and let Vite's built-in processing handle `*.module.*` files instead.
+`cssVite` automatically intercepts CSS imports as virtual modules during build, preventing Vite's internal CSS processing from producing duplicate output. No manual configuration needed.
 
 ```ts
 // vite.config.ts
@@ -63,18 +62,21 @@ import { defineConfig } from "vite";
 import { cssVite } from "rolldown-plugin-css";
 
 export default defineConfig({
-  plugins: [cssVite()], // CSS Modules disabled in plugin, handled by Vite
+  plugins: [cssVite()],
 });
 ```
 
-You can also use `cssRolldown` directly with `cssModules: false` for the same effect:
+### Rollup
 
 ```ts
-import cssRolldown from "rolldown-plugin-css";
+// rollup.config.mjs
+import { cssRollup } from "rolldown-plugin-css";
 
-export default defineConfig({
-  plugins: [cssRolldown({ cssModules: false })],
-});
+export default {
+  input: "src/index.ts",
+  output: { dir: "dist", format: "esm" },
+  plugins: [cssRollup()],
+};
 ```
 
 ### Output structure
@@ -335,9 +337,13 @@ The inject step happens in the same loop iteration where `cssFileName` is alread
 
 ## Peer dependencies
 
-| Package    | Required | Notes             |
-| ---------- | -------- | ----------------- |
-| `rolldown` | ✅       | `^1.0.0` or later |
+| Package    | Required | Notes     |
+| ---------- | -------- | --------- |
+| `rolldown` | Optional | `>=1.0.0` |
+| `rollup`   | Optional | `>=4.0.0` |
+| `vite`     | Optional | `>=7.0.0` |
+
+At least one of `rolldown`, `rollup`, or `vite` should be installed depending on which plugin variant you use.
 
 ---
 

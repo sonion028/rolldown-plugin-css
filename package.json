@@ -110,7 +110,8 @@
       "note": "For usage in Vite, please refer to the README.md."
     },
     "rollup": {
-      "type": "unknown"
+      "type": "compatible",
+      "versions": ">=4.0.0"
     }
   }
 }
