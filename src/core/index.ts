@@ -135,7 +135,11 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
         this.emitFile({
           type: 'asset',
           fileName: cssFileName,
-          source: `${css}${!map ? '' : `\n/*# sourceMappingURL=${slash(path.relative(path.dirname(cssFileName), `${cssFileName}.map`))}`} */`,
+          source: `${css}${
+            !map
+              ? ''
+              : `\n/*# sourceMappingURL=${slash(path.relative(path.dirname(cssFileName), `${cssFileName}.map`))} */`
+          }`,
         });
 
         // 注入 import CSS 语句
