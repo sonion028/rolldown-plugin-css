@@ -33,6 +33,11 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
   return {
     name: 'rolldown-css-plugin',
 
+    // watch 模式下，每次构建前清空缓存
+    buildStart() {
+      cssRecords.clear();
+    },
+
     async transform(code, id) {
       const cleanId = id.split('?')[0] as string;
       if (!CSS_RE.test(cleanId)) return;
@@ -59,7 +64,14 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
         const less = await loadLess();
         const r = await less.render(code, {
           filename: cleanId,
-          ...(sourceMap ? { sourceMap: { sourceMapFileInline: false } } : {}),
+          ...(sourceMap
+            ? {
+                sourceMap: {
+                  sourceMapFileInline: false,
+                  outputSourceFiles: true,
+                },
+              }
+            : {}),
           paths: [path.dirname(cleanId), 'node_modules'],
         });
         cssSource = r.css;
