@@ -116,7 +116,7 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
         const records = cssIds.map((id) => cssRecords.get(id)!);
         const css = records.map((r) => r.css).join('\n');
         // 合并 chunk 要合并 sourceMap，暂不支持
-        const map =
+        const sourceMap =
           records.length === 1 && records[0] ? records[0].map : void 0;
 
         const baseName = `${
@@ -126,20 +126,19 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
         }.css`;
         const cssFileName = cssDir ? `${cssDir}/${baseName}` : baseName;
         // 生成 sourceMap 文件
-        map &&
+        sourceMap &&
           this.emitFile({
             type: 'asset',
             fileName: `${cssFileName}.map`,
-            source: map,
+            source: sourceMap,
           });
+        const sourceMappingURL = !sourceMap
+          ? ''
+          : `\n/*# sourceMappingURL=${slash(path.relative(path.dirname(cssFileName), `${cssFileName}.map`))} */`;
         this.emitFile({
           type: 'asset',
           fileName: cssFileName,
-          source: `${css}${
-            !map
-              ? ''
-              : `\n/*# sourceMappingURL=${slash(path.relative(path.dirname(cssFileName), `${cssFileName}.map`))} */`
-          }`,
+          source: `${css}${sourceMappingURL}`,
         });
 
         // 注入 import CSS 语句
