@@ -87,7 +87,7 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
       if (isModule && cssExports) {
         const classMap: Record<string, string> = {};
         for (const [local, info] of Object.entries(cssExports))
-          classMap[local] = (info as { name: string }).name;
+          classMap[local] = info.name;
         return {
           code: `const classes = ${JSON.stringify(classMap, null, 2)};\nexport default classes;`,
           map: null,
