@@ -42,14 +42,14 @@
   "dependencies": {
     "less": "^4.6.4",
     "lightningcss": "^1.32.0",
-    "sass-embedded": "^1.98.0"
+    "sass-embedded": "^1.100.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.1",
     "@commitlint/config-conventional": "^21.0.1",
     "@eslint/js": "^10.0.1",
     "@types/less": "^3.0.8",
-    "@types/node": "^25.6.2",
+    "@types/node": "^25.9.1",
     "cspell": "^10.0.0",
     "eslint": "^10.4.0",
     "eslint-config-prettier": "^10.1.8",
@@ -63,8 +63,8 @@
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.22.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.4",
-    "vite": ">=7.0.0"
+    "typescript-eslint": "^8.60.0",
+    "vite": "^8.0.14"
   },
   "peerDependencies": {
     "rolldown": ">=1.0.0",
