@@ -8,7 +8,7 @@ import { transform, Features } from '@/transform';
 
 export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
   TransformOptions<C>,
-  'filename' | 'code' | 'sourceMap'
+  'filename' | 'code'
 > {
   /** @default Features.Nesting | Features.CustomMediaQueries */
   include?: number;
@@ -26,9 +26,9 @@ export interface CSSPluginOptions<C extends CustomAtRules> extends Omit<
  * @param {CSSPluginOptions} options - Plugin configuration options.
  */
 function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
-  const { cssDir = 'css', ...lightningOptions } = options;
+  const { cssDir = 'css', sourceMap, ...lightningOptions } = options;
 
-  const cssRecords = new Map<string, string>();
+  const cssRecords = new Map<string, { css: string; map?: string }>();
 
   return {
     name: 'rolldown-css-plugin',
@@ -46,30 +46,32 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
         const sass = await loadSass();
         const r = sass.compileString(code, {
           syntax: cleanId.endsWith('.sass') ? 'indented' : 'scss',
-          sourceMap: true,
-          sourceMapIncludeSources: true,
+          ...(sourceMap
+            ? { sourceMap: true, sourceMapIncludeSources: true }
+            : {}),
           url: new URL(`file://${cleanId}`),
           loadPaths: [path.dirname(cleanId), 'node_modules'],
         });
         cssSource = r.css;
-        if (r.sourceMap) inputSourceMap = JSON.stringify(r.sourceMap);
+        if (sourceMap && r.sourceMap)
+          inputSourceMap = JSON.stringify(r.sourceMap);
       } else if (LESS_RE.test(cleanId)) {
         const less = await loadLess();
         const r = await less.render(code, {
           filename: cleanId,
-          sourceMap: { sourceMapFileInline: false },
+          ...(sourceMap ? { sourceMap: { sourceMapFileInline: false } } : {}),
           paths: [path.dirname(cleanId), 'node_modules'],
         });
         cssSource = r.css;
-        if (r.map) inputSourceMap = r.map;
+        if (sourceMap && r.map) inputSourceMap = r.map;
       }
 
       const filename = path.relative(process.cwd(), cleanId);
       const lcOpts: TransformOptions<CustomAtRules> = {
         minify: false,
         cssModules: isModule,
-        sourceMap: true,
         include: Features.Nesting | Features.CustomMediaQueries,
+        sourceMap,
         ...lightningOptions,
         filename,
         code: Buffer.from(cssSource),
@@ -77,17 +79,17 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
       };
 
       const { code: out, exports: cssExports, map } = transform(lcOpts);
-      cssRecords.set(cleanId, out.toString());
+      cssRecords.set(cleanId, {
+        css: out.toString(),
+        ...(sourceMap && map ? { map: map.toString() } : {}),
+      });
 
       if (isModule && cssExports) {
         const classMap: Record<string, string> = {};
         for (const [local, info] of Object.entries(cssExports))
           classMap[local] = (info as { name: string }).name;
-        const sm = map
-          ? `\n//# sourceMappingURL=data:application/json;base64,${Buffer.from(map.toString()).toString('base64')}`
-          : '';
         return {
-          code: `const classes = ${JSON.stringify(classMap, null, 2)};\nexport default classes;${sm}`,
+          code: `const classes = ${JSON.stringify(classMap, null, 2)};\nexport default classes;`,
           map: null,
           moduleSideEffects: true,
         };
@@ -110,7 +112,12 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
           cssRecords.has(id)
         );
         if (!cssIds?.length) continue;
-        const css = cssIds.map((id) => cssRecords.get(id)!).join('\n');
+
+        const records = cssIds.map((id) => cssRecords.get(id)!);
+        const css = records.map((r) => r.css).join('\n');
+        // 合并 chunk 要合并 sourceMap，暂不支持
+        const map =
+          records.length === 1 && records[0] ? records[0].map : void 0;
 
         const baseName = `${
           chunk.isEntry && chunk.name
@@ -118,7 +125,18 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
             : path.basename(chunk.fileName, path.extname(chunk.fileName))
         }.css`;
         const cssFileName = cssDir ? `${cssDir}/${baseName}` : baseName;
-        this.emitFile({ type: 'asset', fileName: cssFileName, source: css });
+        // 生成 sourceMap 文件
+        map &&
+          this.emitFile({
+            type: 'asset',
+            fileName: `${cssFileName}.map`,
+            source: map,
+          });
+        this.emitFile({
+          type: 'asset',
+          fileName: cssFileName,
+          source: `${css}${!map ? '' : `\n/*# sourceMappingURL=${slash(path.relative(path.dirname(cssFileName), `${cssFileName}.map`))}`} */`,
+        });
 
         // 注入 import CSS 语句
         const jsDir = path.dirname(chunk.fileName);
