@@ -10,15 +10,8 @@ const shared = {
   },
   // 外部依赖配置 原external
   deps: {
-    neverBundle: [
-      'node',
-      'rolldown',
-      'vite',
-      'rollup',
-      'less',
-      'lightningcss',
-      'sass-embedded',
-    ],
+    // 默认排除：运行依赖、可选依赖、对等依赖、node模块，不排除：幽灵依赖、开发依赖
+    neverBundle: [],
   },
   // 输出配置
   format: 'esm', // 输出 ESM, node环境支持 require(ESM)
