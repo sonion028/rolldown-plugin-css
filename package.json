@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "tsdown",
-    "preinstall": "node scripts/sync-node-version/index.js",
+    "preinstall": "pnpm exec sync-node-version",
     "prepare": "pnpm exec simple-git-hooks",
     "lint": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}'",
     "lint:fix": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --fix",
@@ -61,6 +61,7 @@
     "rolldown": "1.0.2",
     "rollup": "^4.60.4",
     "simple-git-hooks": "^2.13.1",
+    "sync-node-version": "^0.1.0",
     "tsdown": "^0.22.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.0",
