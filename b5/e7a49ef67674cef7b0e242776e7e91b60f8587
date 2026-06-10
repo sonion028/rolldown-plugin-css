@@ -1,0 +1,20 @@
+eslint.config.ts
+  h_8198a3bddb05e6 33
+lint-staged.config.ts
+  h_8198a3bddb05e6 2-5,7
+.npmignore
+  h_8198a3bddb05e6 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b5e7a49ef67674cef7b0e242776e7e91b60f8587",
+  "prompts": {},
+  "humans": {
+    "h_8198a3bddb05e6": {
+      "author": "Mr.r <sonion028@gmail.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
