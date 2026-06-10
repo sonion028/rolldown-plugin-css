@@ -1,7 +1,7 @@
 node_modules
 # 发布 不忽略 dist 目录
 !dist
+
 # 不生效
 !.gitignore
-# 不生效
 !.npmignore

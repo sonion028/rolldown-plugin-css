@@ -15,9 +15,6 @@ export default defineConfig([
       // env: globals.node, // Node.js 环境变量
     },
     settings: {
-      react: {
-        version: 'detect', // 自动检测 React 版本
-      },
       jsdoc: {
         mode: 'typescript',
       },
@@ -33,7 +30,7 @@ export default defineConfig([
       'jsdoc/require-returns': 'off', // 关闭 JSDoc 缺少返回值规则
       'jsdoc/require-returns-type': 'off', // 关闭 JSDoc 缺少返回值类型规则
       'jsdoc/require-param-type': 'off', // 关闭 JSDoc 缺少参数类型规则
-      '@typescript-eslint/no-unused-expressions': 'off', // 关闭未使用表达式校验，开启React常用的短路规则可能误判
+      '@typescript-eslint/no-unused-expressions': 'off', // 关闭未使用表达式校验，开启常用的短路规则可能误判
       '@typescript-eslint/no-unused-vars': ['warn'], // 警告未使用变量 如遇到 与tsconfig.json 冲突，以ts为准
     },
   },
