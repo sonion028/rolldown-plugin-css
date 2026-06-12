@@ -1,0 +1,67 @@
+.github/workflows/release.yaml
+  h_8198a3bddb05e6 95,98 gitai:{"mixed_line_ranges":[{"Single":95},{"Single":98}],"operations":[]}
+  s_e9868d612b08c5::t_10577ca29a9f9f 96-97 gitai:{"mixed_line_ranges":[{"Single":96}],"operations":[]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bcfd1536bcd7680965bcf162c29478d4cf8370b8",
+  "prompts": {},
+  "humans": {
+    "h_8198a3bddb05e6": {
+      "author": "Mr.r <sonion028@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_e9868d612b08c5": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-8329385d-5585-4bb6-bde7-119b7ddc119c",
+        "model": "default"
+      },
+      "human_author": "Mr.r <sonion028@gmail.com>"
+    }
+  },
+  "attestation_metadata": {
+    ".github/workflows/release.yaml": [
+      {
+        "hash": "h_8198a3bddb05e6",
+        "line_ranges": [
+          {
+            "Single": 95
+          },
+          {
+            "Single": 98
+          }
+        ],
+        "mixed_line_ranges": [
+          {
+            "Single": 95
+          },
+          {
+            "Single": 98
+          }
+        ],
+        "operations": []
+      },
+      {
+        "hash": "s_e9868d612b08c5::t_10577ca29a9f9f",
+        "line_ranges": [
+          {
+            "Range": [
+              96,
+              97
+            ]
+          }
+        ],
+        "mixed_line_ranges": [
+          {
+            "Single": 96
+          }
+        ],
+        "operations": []
+      }
+    ]
+  },
+  "remote_transcripts": {}
+}
