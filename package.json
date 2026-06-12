@@ -28,8 +28,6 @@
   },
   "scripts": {
     "build": "tsdown",
-    "preinstall": "pnpm exec sync-node-version",
-    "prepare": "pnpm exec simple-git-hooks",
     "lint": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}'",
     "lint:fix": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --fix",
     "lint:error": "eslint '{src,apps,packages}/**/*.{ts,tsx,js,jsx,vue}' --quiet",
@@ -37,7 +35,9 @@
     "fmt": "oxfmt '{src,packages,apps}/**/*.*'",
     "fmt:check": "oxfmt --check '{src,packages,apps}/**/*.*'",
     "check": "pnpm exec tsc --noEmit && pnpm run lint && pnpm run fmt:check && pnpm run lint:spell",
-    "fix": "pnpm run lint:fix && pnpm run fmt"
+    "fix": "pnpm run lint:fix && pnpm run fmt",
+    "preinstall": "node scripts/sync-node-version.js",
+    "prepare": "pnpm exec simple-git-hooks"
   },
   "dependencies": {
     "less": "^4.6.4",
