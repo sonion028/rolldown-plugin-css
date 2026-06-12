@@ -4,6 +4,14 @@ description: 运行 TypeScript 编译检查和 ESLint 检查
 runs:
   using: composite
   steps:
+    # 使用 pnpm 安装依赖 等价于 npm ci
+    - name: 安装依赖（使用 pnpm）
+      shell: bash
+      run: |
+        echo "开始安装依赖..."
+        pnpm install --frozen-lockfile --verbose
+        echo "依赖安装完成 ✅"
+
     # TypeScript 编译检查
     - name: TypeScript 检查
       shell: bash

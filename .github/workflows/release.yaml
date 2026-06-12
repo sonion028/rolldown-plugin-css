@@ -72,10 +72,10 @@ jobs:
           fi
           echo "Commitlint 检查通过 ✅"
 
-      # tag 同步 package.json 版本 依赖jq
+      # tag 同步 package.json 版本
       - name: 同步 Tag 为 package.json 版本
         run: |
-          set -e
+          set -eo pipefail
           TAG=${GITHUB_REF#refs/tags/}
           VERSION=${TAG#v}
           echo "当前 Tag: $TAG，提取版本号: $VERSION"
@@ -83,28 +83,28 @@ jobs:
             echo "错误：版本号为空，请检查 Tag 格式（应为 vX.Y.Z）"
             exit 1
           fi
-          jq ".version = \"$VERSION\"" package.json > package.json.tmp
-          mv package.json.tmp package.json
-          echo "更新后 package.json 版本: $(cat package.json | grep version)"
+          pnpm -r pkg set version="$VERSION"
+          echo "更新后 package.json 版本: $(pnpm pkg get version)"
 
       - name: 编译
         run: |
           echo "开始构建..."
-          pnpm run build
+          pnpm -r run build
           echo "构建完成 ✅"
 
       # 打印将要发布的文件列表，避免误发布
       - name: 打印发布文件列表
-        run: pnpm pack --dry-run
+        run: pnpm -r pack --dry-run
 
       # 发布到 npm registry - 只在标签触发时执行
       - name: Publish 到 npm
         run: |
           echo "开始发布到 npm..."
-          pnpm publish --access public --no-git-checks
+          pnpm -r publish --access public --no-git-checks
           echo "发布成功 ✅"
         # env:
         #   NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_TOKEN }} # 首次发布需要
+        # 加 --tag canary 发布到 canary channel
 
       # 只有发布成功后才生成 GitHub Release
       - name: 创建 GitHub Release 记录
