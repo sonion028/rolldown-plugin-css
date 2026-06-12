@@ -92,11 +92,6 @@ jobs:
           pnpm -r run build
           echo "构建完成 ✅"
 
-      # 存在 devEngines 时，engines 不生效
-      # - name: 移除 devEngines
-      #   run: |
-      #     pnpm -r pkg delete devEngines
-
       # 打印将要发布的文件列表，避免误发布
       - name: 打印发布文件列表
         run: pnpm -r pack --dry-run
