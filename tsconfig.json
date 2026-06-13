@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["tsdown", "node"],
+    "types": ["node"],
 
     /* 目标与模块 */
     "target": "ESNext",
