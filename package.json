@@ -34,7 +34,7 @@
     "fmt:check": "oxfmt --check 'src/**/*.*'",
     "check": "pnpm exec tsc --noEmit && pnpm run lint && pnpm run fmt:check && pnpm run lint:spell",
     "fix": "pnpm run lint:fix && pnpm run fmt",
-    "preinstall": "node scripts/sync-node-version/index.js --version-range",
+    "preinstall": "node scripts/sync-node-version/index.js",
     "prepare": "pnpm exec simple-git-hooks"
   },
   "dependencies": {
