@@ -3,6 +3,7 @@ allowBuilds:
   esbuild: false
   simple-git-hooks: true
 minimumReleaseAge: 360 # 小时
+strictPeerDependencies: true
 
 # v10.x
 onlyBuiltDependencies:
