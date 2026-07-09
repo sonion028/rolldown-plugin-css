@@ -1,8 +1,8 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import jslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import prettier from 'eslint-config-prettier';
+import tslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier/flat';
 import jsdoc from 'eslint-plugin-jsdoc';
 
 export default defineConfig([
@@ -22,7 +22,7 @@ export default defineConfig([
     extends: [
       prettier, // ✅ 关闭和 Prettier 冲突的规则
       jslint.configs.recommended, // ✅ JavaScript 规则
-      ...tseslint.configs.recommended, // ✅ TypeScript 规则
+      ...tslint.configs.recommended, // ✅ TypeScript 规则
       jsdoc.configs['flat/recommended'], // ✅ JSDoc 扁平插件配置对象
     ],
     rules: {
