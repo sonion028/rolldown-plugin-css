@@ -1,0 +1,29 @@
+package.json
+  s_b7ce2f2871a6b4::t_b9c029a467fa82 36
+  h_8198a3bddb05e6 35
+eslint.config.ts
+  h_8198a3bddb05e6 4-5,25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "6d5344c176799198887e2bb813f7199e2b5b190b",
+  "prompts": {},
+  "humans": {
+    "h_8198a3bddb05e6": {
+      "author": "Mr.r <sonion028@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_b7ce2f2871a6b4": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-40032327-7fe7-409d-8bbf-fe71833f7a20",
+        "model": "default"
+      },
+      "human_author": "Mr.r <sonion028@gmail.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
