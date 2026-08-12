@@ -1,8 +1,8 @@
 import path from 'node:path';
 import type { Plugin, NormalizedOutputOptions, OutputBundle } from 'rolldown';
 import type { TransformOptions, CustomAtRules } from 'lightningcss';
-import { CSS_RE, SASS_RE, LESS_RE, CSS_MOD_RE } from '@/constant';
-import { slash } from '@/utils';
+import { CSS_REQUEST_RE } from '@/constant';
+import { parseCSSRequest, slash } from '@/utils';
 import { loadSass, loadLess } from '@/preprocessor';
 import { transform, Features } from '@/transform';
 
@@ -38,80 +38,81 @@ function cssRolldown(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
       cssRecords.clear();
     },
 
-    async transform(code, id) {
-      const cleanId = id.split('?')[0] as string;
-      if (!CSS_RE.test(cleanId)) return;
+    transform: {
+      filter: { id: CSS_REQUEST_RE },
+      async handler(code, id) {
+        const request = parseCSSRequest(id);
+        if (!request) return;
 
-      const isModule = CSS_MOD_RE.test(cleanId);
+        let cssSource = code;
+        let inputSourceMap: string | undefined;
 
-      let cssSource = code;
-      let inputSourceMap: string | undefined;
+        if (request.lang === 'scss' || request.lang === 'sass') {
+          const sass = await loadSass();
+          const r = sass.compileString(code, {
+            syntax: request.lang === 'sass' ? 'indented' : 'scss',
+            ...(sourceMap
+              ? { sourceMap: true, sourceMapIncludeSources: true }
+              : {}),
+            url: new URL(`file://${request.filePath}`),
+            loadPaths: [path.dirname(request.filePath), 'node_modules'],
+          });
+          cssSource = r.css;
+          if (sourceMap && r.sourceMap)
+            inputSourceMap = JSON.stringify(r.sourceMap);
+        } else if (request.lang === 'less') {
+          const less = await loadLess();
+          const r = await less.render(code, {
+            filename: request.filePath,
+            ...(sourceMap
+              ? {
+                  sourceMap: {
+                    sourceMapFileInline: false,
+                    outputSourceFiles: true,
+                  },
+                }
+              : {}),
+            paths: [path.dirname(request.filePath), 'node_modules'],
+          });
+          cssSource = r.css;
+          if (sourceMap && r.map) inputSourceMap = r.map;
+        }
 
-      if (SASS_RE.test(cleanId)) {
-        const sass = await loadSass();
-        const r = sass.compileString(code, {
-          syntax: cleanId.endsWith('.sass') ? 'indented' : 'scss',
-          ...(sourceMap
-            ? { sourceMap: true, sourceMapIncludeSources: true }
-            : {}),
-          url: new URL(`file://${cleanId}`),
-          loadPaths: [path.dirname(cleanId), 'node_modules'],
+        const filename = path.relative(process.cwd(), request.filename);
+        const lcOpts: TransformOptions<CustomAtRules> = {
+          minify: false,
+          cssModules: request.isModule,
+          include: Features.Nesting | Features.CustomMediaQueries,
+          sourceMap,
+          ...lightningOptions,
+          filename,
+          code: Buffer.from(cssSource),
+          ...(inputSourceMap ? { inputSourceMap } : {}),
+        };
+
+        const { code: out, exports: cssExports, map } = transform(lcOpts);
+        cssRecords.set(request.id, {
+          css: out.toString(),
+          ...(sourceMap && map ? { map: map.toString() } : {}),
         });
-        cssSource = r.css;
-        if (sourceMap && r.sourceMap)
-          inputSourceMap = JSON.stringify(r.sourceMap);
-      } else if (LESS_RE.test(cleanId)) {
-        const less = await loadLess();
-        const r = await less.render(code, {
-          filename: cleanId,
-          ...(sourceMap
-            ? {
-                sourceMap: {
-                  sourceMapFileInline: false,
-                  outputSourceFiles: true,
-                },
-              }
-            : {}),
-          paths: [path.dirname(cleanId), 'node_modules'],
-        });
-        cssSource = r.css;
-        if (sourceMap && r.map) inputSourceMap = r.map;
-      }
 
-      const filename = path.relative(process.cwd(), cleanId);
-      const lcOpts: TransformOptions<CustomAtRules> = {
-        minify: false,
-        cssModules: isModule,
-        include: Features.Nesting | Features.CustomMediaQueries,
-        sourceMap,
-        ...lightningOptions,
-        filename,
-        code: Buffer.from(cssSource),
-        ...(inputSourceMap ? { inputSourceMap } : {}),
-      };
+        if (request.isModule && cssExports) {
+          const classMap: Record<string, string> = {};
+          for (const [local, info] of Object.entries(cssExports))
+            classMap[local] = info.name;
+          return {
+            code: `const classes = ${JSON.stringify(classMap, null, 2)};\nexport default classes;`,
+            map: null,
+            moduleSideEffects: true,
+          };
+        }
 
-      const { code: out, exports: cssExports, map } = transform(lcOpts);
-      cssRecords.set(cleanId, {
-        css: out.toString(),
-        ...(sourceMap && map ? { map: map.toString() } : {}),
-      });
-
-      if (isModule && cssExports) {
-        const classMap: Record<string, string> = {};
-        for (const [local, info] of Object.entries(cssExports))
-          classMap[local] = info.name;
         return {
-          code: `const classes = ${JSON.stringify(classMap, null, 2)};\nexport default classes;`,
+          code: `/* css-plugin: ${filename} */`,
           map: null,
           moduleSideEffects: true,
         };
-      }
-
-      return {
-        code: `/* css-plugin: ${filename} */`,
-        map: null,
-        moduleSideEffects: true,
-      };
+      },
     },
 
     generateBundle(opts: NormalizedOutputOptions, bundle: OutputBundle) {

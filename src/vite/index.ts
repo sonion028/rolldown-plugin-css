@@ -1,10 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createVirtualId, isVirtualId, toRealId } from '@/utils';
+import {
+  createVirtualId,
+  isVirtualId,
+  parseCSSRequest,
+  toRealId,
+} from '@/utils';
 import type { Plugin } from 'vite';
 import cssRolldown, { type CSSPluginOptions } from '@/core';
 import type { CustomAtRules } from 'lightningcss';
-import { CSS_RE } from '@/constant';
 
 type RolldownPlugin = Pick<
   ReturnType<typeof cssRolldown>,
@@ -14,6 +18,17 @@ type RolldownPlugin = Pick<
 type RolldownPluginFnType = {
   [F in keyof RolldownPlugin]: RolldownPlugin[F] &
     ((...args: unknown[]) => unknown);
+};
+
+const getHookHandler = <T>(hook: T | { handler: T }): T =>
+  typeof hook === 'object' && hook !== null && 'handler' in hook
+    ? hook.handler
+    : hook;
+
+const splitRequest = (id: string) => {
+  const queryIndex = id.indexOf('?');
+  if (queryIndex < 0) return { pathname: id, query: '' };
+  return { pathname: id.slice(0, queryIndex), query: id.slice(queryIndex) };
 };
 
 /**
@@ -26,12 +41,14 @@ function cssVite(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
   const rolldownPlugin = cssRolldown(options);
 
   // 从 ObjectHook 中提取实际的 handler 函数
-  const rolldownTransform = rolldownPlugin.transform as NonNullable<
-    RolldownPluginFnType['transform']
-  >;
-  const rolldownGenerateBundle = rolldownPlugin.generateBundle as NonNullable<
-    RolldownPluginFnType['generateBundle']
-  >;
+  const rolldownTransform = getHookHandler(
+    rolldownPlugin.transform as NonNullable<RolldownPlugin['transform']>
+  ) as NonNullable<RolldownPluginFnType['transform']>;
+  const rolldownGenerateBundle = getHookHandler(
+    rolldownPlugin.generateBundle as NonNullable<
+      RolldownPlugin['generateBundle']
+    >
+  ) as NonNullable<RolldownPluginFnType['generateBundle']>;
 
   return {
     name: 'rolldown-css-plugin',
@@ -39,17 +56,20 @@ function cssVite(options: CSSPluginOptions<CustomAtRules> = {}): Plugin {
     apply: 'build', // 仅构建阶段运行，开发环境由 Vite 自行处理 CSS
 
     resolveId(id, importer) {
-      const cleanId = id.split('?')[0]; // 处理 query 参数
-      if (!cleanId || !CSS_RE.test(cleanId) || !importer) return;
-      const resolved = path.resolve(path.dirname(importer), id);
+      const request = parseCSSRequest(id);
+      if (!request || request.isComponentStyle || !importer) return;
+      const { pathname, query } = splitRequest(id);
+      const resolved = `${path.resolve(path.dirname(importer.split('?')[0]!), pathname)}${query}`;
       return createVirtualId(resolved);
     },
 
     async load(id) {
       if (!isVirtualId(id)) return;
       const realId = toRealId(id);
+      const request = parseCSSRequest(realId);
+      if (!request) return;
       try {
-        const code = await fs.promises.readFile(realId, 'utf-8');
+        const code = await fs.promises.readFile(request.filePath, 'utf-8');
         return { code, moduleSideEffects: true };
       } catch {
         return;
