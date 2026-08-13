@@ -15,6 +15,13 @@
   "license": "MIT",
   "author": "sonion",
   "repository": "https://github.com/sonion028/rolldown-plugin-css",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE",
+    ".npmrc"
+  ],
   "type": "module",
   "module": "dist/index.esm.js",
   "types": "dist/types/index.d.mts",
